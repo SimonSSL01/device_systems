@@ -1,0 +1,62 @@
+# Entornos virtuales
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyc
+
+# Archivos de configuración de entorno (seguridad)
+.env
+.env.local
+.env.*.local
+
+# Editores e IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# Logs y bases de datos
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de sistema
+Thumbs.db
+desktop.ini
+
+# Archivos de empaquetado
+*.tar.gz
+*.whl
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Configuraciones locales
+*.local.py
