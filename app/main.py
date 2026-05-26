@@ -7,7 +7,6 @@ app = FastAPI(
     version="1.0"
 )
 
-# Incluir las rutas de usuarios
 app.include_router(router)
 
 @app.get("/", tags=["Root"])
