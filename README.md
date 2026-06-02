@@ -79,4 +79,6 @@ Se implementaron exitosamente los endpoints GET y POST para la gestión de usuar
 
 ### Video De Sustentación
 
-*   **Enlace al video:** 
+*   **Enlace al video 1:** https://youtu.be/u5HaJ4sqxFQ
+*   **Enlace al video 2:** 
+

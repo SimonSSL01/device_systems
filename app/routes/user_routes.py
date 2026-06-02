@@ -1,56 +1,73 @@
-from fastapi import APIRouter, HTTPException, Header, Query
+from fastapi import APIRouter, Depends, Query, status
 from typing import Optional, List
-from app.schemas.user_schema import UserCreate, UserResponse
+from app.schemas.user_schema import UserCreate, UserResponse, UserUpdate, UserPatch
+from app.services import user_service
+from app.dependencies.user_dependencies import verify_headers
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/users",
+    tags=["Users"],
+    dependencies=[Depends(verify_headers)]
+)
 
-# Base de datos simulada (usuarios iniciales al arrancar)
-fake_db = [
-    {"id": 1, "name": "Simon", "email": "simon@example.com", "role": "admin", "is_active": True},
-    {"id": 2, "name": "Luis", "email": "luis@example.com", "role": "support", "is_active": True},
-    {"id": 3, "name": "Mariana", "email": "mari@example.com", "role": "user", "is_active": True},
-    {"id": 4, "name": "Carlos", "email": "carlos@example.com", "role": "user", "is_active": False},
-]
-current_id = 5
-
-@router.get("/users", response_model=List[UserResponse])
+@router.get(
+    "/",
+    response_model=List[UserResponse],
+    status_code=status.HTTP_200_OK,
+    summary="Listar usuarios",
+    description="Obtiene todos los usuarios. Puede filtrar por rol y estado activo."
+)
 async def get_users(
-    role: Optional[str] = Query(None, description="Filtrar por rol"),
+    role: Optional[str] = Query(None, description="Filtrar por rol (admin, support, user)"),
     is_active: Optional[bool] = Query(None, description="Filtrar por estado activo/inactivo")
 ):
-    result = fake_db
-    if role:
-        result = [u for u in result if u["role"] == role]
-    if is_active is not None:
-        result = [u for u in result if u["is_active"] == is_active]
-    return result
+    return user_service.get_all_users(role, is_active)
 
-@router.get("/users/{user_id}", response_model=UserResponse)
+@router.get(
+    "/{user_id}",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Obtener usuario por ID",
+    description="Retorna un usuario específico según su ID."
+)
 async def get_user(user_id: int):
-    user = next((u for u in fake_db if u["id"] == user_id), None)
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    return user
+    return user_service.get_user_by_id(user_id)
 
-@router.post("/users", response_model=UserResponse, status_code=201)
-async def create_user(
-    user: UserCreate,
-    x_app_name: str = Header(..., alias="X-App-Name"),
-    x_api_version: str = Header(..., alias="X-API-Version")
-):
-    global current_id
-    
-    if any(u["email"] == user.email for u in fake_db):
-        raise HTTPException(status_code=400, detail="El correo ya está registrado")
-    
-    if user.role not in ["admin", "support", "user"]:
-        raise HTTPException(status_code=400, detail="Rol no permitido")
-    
-    new_user = user.dict()
-    new_user["id"] = current_id
-    fake_db.append(new_user)
-    current_id += 1
-    
-    print(f"Aplicación: {x_app_name} - Versión: {x_api_version}")
-    
-    return new_user
+@router.post(
+    "/",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Crear usuario",
+    description="Registra un nuevo usuario. Valida email único y rol permitido."
+)
+async def create_user(user: UserCreate):
+    return user_service.create_user(user)
+
+@router.put(
+    "/{user_id}",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Actualizar usuario completamente",
+    description="Reemplaza todos los datos del usuario (requiere todos los campos)."
+)
+async def update_user(user_id: int, user: UserUpdate):
+    return user_service.update_user(user_id, user)
+
+@router.patch(
+    "/{user_id}",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Actualizar usuario parcialmente",
+    description="Actualiza solo los campos enviados en la petición."
+)
+async def patch_user(user_id: int, user_patch: UserPatch):
+    return user_service.patch_user(user_id, user_patch)
+
+@router.delete(
+    "/{user_id}",
+    status_code=status.HTTP_200_OK,   # O también 204 sin cuerpo
+    summary="Eliminar usuario",
+    description="Borra un usuario de la base de datos."
+)
+async def delete_user(user_id: int):
+    return user_service.delete_user(user_id)
