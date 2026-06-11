@@ -133,9 +133,11 @@ Se evidencia del manejo de errores con un usuario que no puede tener el rol "Sup
 ![Validaciones y errores](images/img6.png)
 
 Se evidencia que no se puede realizar un solo cambio con el PUT.
+
 ![Validaciones y errores](images/img8.png)
 
 Se evidencia que no se puede realizar la eliminación de un usuario que ya no existe con el DELETE.
+
 ![Validaciones y errores](images/img11.png)
 ---
 
