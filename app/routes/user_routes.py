@@ -1,73 +1,41 @@
 from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy.orm import Session
 from typing import Optional, List
 from app.schemas.user_schema import UserCreate, UserResponse, UserUpdate, UserPatch
 from app.services import user_service
-from app.dependencies.user_dependencies import verify_headers
+from app.database.connection import get_db
+from app.dependencies.user_dependencies import verify_headers   # dependencia de cabeceras (opcional)
 
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
-    dependencies=[Depends(verify_headers)]
+    dependencies=[Depends(verify_headers)]   # si quieres mantener la validación de cabeceras
 )
 
-@router.get(
-    "/",
-    response_model=List[UserResponse],
-    status_code=status.HTTP_200_OK,
-    summary="Listar usuarios",
-    description="Obtiene todos los usuarios. Puede filtrar por rol y estado activo."
-)
+@router.get("/", response_model=List[UserResponse], status_code=status.HTTP_200_OK)
 async def get_users(
     role: Optional[str] = Query(None, description="Filtrar por rol (admin, support, user)"),
-    is_active: Optional[bool] = Query(None, description="Filtrar por estado activo/inactivo")
+    is_active: Optional[bool] = Query(None, description="Filtrar por estado activo/inactivo"),
+    db: Session = Depends(get_db)
 ):
-    return user_service.get_all_users(role, is_active)
+    return user_service.get_all_users(db, role, is_active)
 
-@router.get(
-    "/{user_id}",
-    response_model=UserResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Obtener usuario por ID",
-    description="Retorna un usuario específico según su ID."
-)
-async def get_user(user_id: int):
-    return user_service.get_user_by_id(user_id)
+@router.get("/{user_id}", response_model=UserResponse, status_code=status.HTTP_200_OK)
+async def get_user(user_id: int, db: Session = Depends(get_db)):
+    return user_service.get_user_by_id(db, user_id)
 
-@router.post(
-    "/",
-    response_model=UserResponse,
-    status_code=status.HTTP_201_CREATED,
-    summary="Crear usuario",
-    description="Registra un nuevo usuario. Valida email único y rol permitido."
-)
-async def create_user(user: UserCreate):
-    return user_service.create_user(user)
+@router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+async def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    return user_service.create_user(db, user)
 
-@router.put(
-    "/{user_id}",
-    response_model=UserResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Actualizar usuario completamente",
-    description="Reemplaza todos los datos del usuario (requiere todos los campos)."
-)
-async def update_user(user_id: int, user: UserUpdate):
-    return user_service.update_user(user_id, user)
+@router.put("/{user_id}", response_model=UserResponse, status_code=status.HTTP_200_OK)
+async def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
+    return user_service.update_user(db, user_id, user)
 
-@router.patch(
-    "/{user_id}",
-    response_model=UserResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Actualizar usuario parcialmente",
-    description="Actualiza solo los campos enviados en la petición."
-)
-async def patch_user(user_id: int, user_patch: UserPatch):
-    return user_service.patch_user(user_id, user_patch)
+@router.patch("/{user_id}", response_model=UserResponse, status_code=status.HTTP_200_OK)
+async def patch_user(user_id: int, user_patch: UserPatch, db: Session = Depends(get_db)):
+    return user_service.patch_user(db, user_id, user_patch)
 
-@router.delete(
-    "/{user_id}",
-    status_code=status.HTTP_200_OK,   # O también 204 sin cuerpo
-    summary="Eliminar usuario",
-    description="Borra un usuario de la base de datos."
-)
-async def delete_user(user_id: int):
-    return user_service.delete_user(user_id)
+@router.delete("/{user_id}", status_code=status.HTTP_200_OK)
+async def delete_user(user_id: int, db: Session = Depends(get_db)):
+    return user_service.delete_user(db, user_id)
