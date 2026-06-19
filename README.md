@@ -4,14 +4,11 @@ API REST construida con FastAPI para la gestión del recurso users dentro del si
 
 ---
 
-**device_systems API** es una API REST construida con FastAPI que permite gestionar usuarios de un sistema. La API soporta operaciones **CRUD** completas:
+**device_systems API** es una API REST construida con FastAPI que permite gestionar usuarios, dispositivos y prestamos de un sistema. La API soporta operaciones **CRUD** completas:
 
-- **Crear** usuarios
-- **Listar** usuarios (con filtros por rol y estado)
-- **Consultar** un usuario por su ID
-- **Actualizar completamente** un usuario (PUT)
-- **Actualizar parcialmente** un usuario (PATCH)
-- **Eliminar** usuarios (DELETE)
+- Usuarios: Crear, listar, consultar, actualizar y eliminar usuarios.
+- Dispositivos: Gestionar equipos tecnologicos (laptops, tablets, proyectores, etc.).
+- Prestamos: Registrar y gestionar prestamos de dispositivos a usuarios.
 
 Además, implementa validaciones de datos, manejo de errores con códigos HTTP apropiados, inyección de dependencias para validar cabeceras, y documentación automática generada con Swagger.
 
@@ -57,6 +54,58 @@ X-API-Version: 1.0
 | 404 | Not Found | Usuario no encontrado |
 | 422 | Unprocessable Entity | Error de validación de Pydantic (ej. email mal formado) |
 
+## Endpoints disponibles
+
+### Recurso: Users (`/users`)
+
+| Metodo | Endpoint | Codigo exito | Descripcion |
+|--------|----------|--------------|-------------|
+| GET | `/users` | 200 | Lista todos los usuarios |
+| GET | `/users/{user_id}` | 200 | Obtiene usuario por ID |
+| POST | `/users` | 201 | Crea un nuevo usuario |
+| PUT | `/users/{user_id}` | 200 | Actualiza completamente un usuario |
+| PATCH | `/users/{user_id}` | 200 | Actualiza parcialmente un usuario |
+| DELETE | `/users/{user_id}` | 200 | Elimina un usuario |
+
+### Recurso: Devices (`/devices`)
+
+| Metodo | Endpoint | Codigo exito | Descripcion |
+|--------|----------|--------------|-------------|
+| GET | `/devices` | 200 | Lista dispositivos (con filtros) |
+| GET | `/devices/{device_id}` | 200 | Obtiene dispositivo por ID |
+| POST | `/devices` | 201 | Crea un nuevo dispositivo |
+| PUT | `/devices/{device_id}` | 200 | Actualiza completamente un dispositivo |
+| PATCH | `/devices/{device_id}` | 200 | Actualiza parcialmente un dispositivo |
+| DELETE | `/devices/{device_id}` | 200 | Elimina un dispositivo |
+
+**Filtros para GET /devices:**
+- `?device_type=laptop` - Filtrar por tipo
+- `?is_available=true` - Filtrar por disponibilidad
+- `?brand=lenovo` - Filtrar por marca
+- `?search=thinkpad` - Buscar por nombre o numero de serie
+
+### Recurso: Loans (`/loans`)
+
+| Metodo | Endpoint | Codigo exito | Descripcion |
+|--------|----------|--------------|-------------|
+| GET | `/loans` | 200 | Lista prestamos (con filtros) |
+| GET | `/loans/{loan_id}` | 200 | Obtiene prestamo por ID |
+| GET | `/loans/details` | 200 | Prestamos con datos relacionados (JOIN) |
+| GET | `/loans/user/{user_id}` | 200 | Prestamos de un usuario |
+| GET | `/loans/device/{device_id}` | 200 | Historial de prestamos de un dispositivo |
+| POST | `/loans` | 201 | Crea un nuevo prestamo |
+| PATCH | `/loans/{loan_id}/return` | 200 | Devuelve un dispositivo |
+| DELETE | `/loans/{loan_id}` | 200 | Elimina un prestamo |
+
+**Filtros para GET /loans:**
+- `?status=active` - Filtrar por estado (active, returned, overdue)
+- `?user_id=1` - Filtrar por usuario
+- `?device_id=1` - Filtrar por dispositivo
+
+**Filtros para GET /loans/details:**
+- `?status=active` - Filtrar por estado
+- `?user_email=ana@example.com` - Filtrar por email del usuario
+- `?device_type=laptop` - Filtrar por tipo de dispositivo
 
 ## Capturas de Swagger UI
 
@@ -142,7 +191,7 @@ Se evidencia que no se puede realizar la eliminación de un usuario que ya no ex
 ---
 
 ## Como se uso Depends() para reutilizar la logica?
-Se creo una dependencia verify_headers que valida las cabeceras X-App-Name y X-API-Version. Luego se le inyecta en todas las rutas con dependencies. Esto para evitar repetir la misma validación en cada endpoint y centralizando la lógica.
+Se creo una dependencia verify_headers que valida las cabeceras X-App-Name y X-API-Version. Luego se le inyecta en todas las rutas con dependencies. Esto para evitar repetir la misma validación en cada endpoint y centralizando la lógica, , ademas, el proyecto utiliza Depends() de FastAPI para reutilizar lógica común entre múltiples endpoints sin repetir código. Las dependencias están definidas en app/dependencies/user_dependencies.py.
 
 ---
 
@@ -158,3 +207,4 @@ Se implementaron exitosamente los endpoints GET, POST, PUT, PATCH y DELETE para 
 *   **Enlace al video 1:** https://youtu.be/u5HaJ4sqxFQ
 *   **Enlace al video 2:** https://youtu.be/HdFrOCEhPnc
 *   **Enlace al video 3:** https://youtu.be/DT0hcw2f51M
+*   **Enlace al video 4:** 
