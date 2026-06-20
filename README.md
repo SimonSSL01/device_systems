@@ -114,11 +114,12 @@ X-API-Version: 1.0
 ## Capturas correspondientes a actividad 10 (alembic)
 
 Capturas de alembic, connfirmación de instalación, revision de versiones y historial de cambios:
-![Alembic](images/img13.png)
-![Alembic](images/img14.png)
-![Alembic](images/img15.png)
+- ![Alembic](images/img13.png)
+- ![Alembic](images/img14.png)
+- ![Alembic](images/img15.png)
 
-Estructura de la carpeta de alembic
+- Estructura de la carpeta de alembic:
+
 ![Alembic](images/img16.png)
 
 --- 
@@ -251,7 +252,7 @@ Se evidencia como funciona el endpoint cuando se quiere agregar un nuevo disposi
 
 ---
 
-### . Validaciones y errores
+### 16. Validaciones y errores
 
 Se evidencia del manejo de errores con un usuario que no puede tener el rol "SuperUser" con el POST.
 
@@ -268,6 +269,7 @@ Se evidencia que no se puede realizar la eliminación de un usuario que ya no ex
 Se evidencia que no se puede realizar el post de un dispositivo ya que no cuenta con un tipo permitido.
 
 ![Validaciones y errores](images/errorpostdevice.png)
+
 ---
 
 ## Como se uso Depends() para reutilizar la logica?
