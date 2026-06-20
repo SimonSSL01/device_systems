@@ -289,4 +289,4 @@ Se implementaron exitosamente los endpoints GET, POST, PUT, PATCH y DELETE para 
 *   **Enlace al video 1:** https://youtu.be/u5HaJ4sqxFQ
 *   **Enlace al video 2:** https://youtu.be/HdFrOCEhPnc
 *   **Enlace al video 3:** https://youtu.be/DT0hcw2f51M
-*   **Enlace al video 4:** 
+*   **Enlace al video 4:** https://youtu.be/c2sIXg53BWU
