@@ -54,6 +54,8 @@ X-API-Version: 1.0
 | 404 | Not Found | Usuario no encontrado |
 | 422 | Unprocessable Entity | Error de validación de Pydantic (ej. email mal formado) |
 
+--- 
+
 ## Endpoints disponibles
 
 ### Recurso: Users (`/users`)
@@ -107,9 +109,33 @@ X-API-Version: 1.0
 - `?user_email=ana@example.com` - Filtrar por email del usuario
 - `?device_type=laptop` - Filtrar por tipo de dispositivo
 
+---
+
+## Capturas correspondientes a actividad 10 (alembic)
+
+Capturas de alembic, connfirmación de instalación, revision de versiones y historial de cambios:
+![Alembic](images/img13.png)
+![Alembic](images/img14.png)
+![Alembic](images/img15.png)
+
+Estructura de la carpeta de alembic
+![Alembic](images/img16.png)
+
+--- 
+
+## Capturas de estructura de tablas de la base de datos:
+### Usuarios
+![users](images/img17.png)
+### Dispositivos
+![devices](images/img18.png)
+### Prestamos
+![loans](images/img19.png)
+
+
+
 ## Capturas de Swagger UI
 
-### 1. Vista general de Swagger UI
+### 1. Vista general de Swagger UI (solo usuarios)
 
 Captura que muestra todos los endpoints disponibles en la documentación interactiva
 
@@ -175,7 +201,57 @@ Evidencia de como quedo la lista de usuarios despues de las pruebas del PUT, PAT
 
 ---
 
-### 9. Validaciones y errores
+### 9. Vista general de swagger (solo devices y loans)
+
+Evidencia de como quedo la vista general de swagger con los nuevos recursos
+
+![New swagger general](images/img20.png)
+
+---
+### 10. Prueba GET `/devices`
+
+Se evidencia de como funciona el endpoint y lista los dispositivos.
+
+![GET /devices](images/getalldevices.png)
+
+---
+### 11. Prueba GET `/devices/{device_id}`
+
+Se evidencia de como funciona el endpoint y lista solo el dispositivo con la id que se le dio.
+
+![GET /devices/{device_id}](images/getdeviceid.png)
+
+---
+### 12. Prueba DELETE `/device`
+
+Se evidencia como funciona el endpoint cuando se quiere eliminar un dispositivo.
+
+![DELETE /devices](images/deletedevice.png)
+
+---
+### 13. Prueba PATCH `/device`
+
+Se evidencia como funciona el endpoint cuando se quiere actualizar solo una información de un dispositivo.
+
+![PATCH /devices](images/patchdevices.png)
+
+---
+### 14. Prueba PUT `/device`
+
+Se evidencia como funciona el endpoint cuando se quiere actualizar toda la información de un dispositivo.
+
+![PUT /devices](images/putdevices.png)
+
+---
+### 15. Prueba POST `/device`
+
+Se evidencia como funciona el endpoint cuando se quiere agregar un nuevo dispositivo.
+
+![POST /devices](images/postdevices.png)
+
+---
+
+### . Validaciones y errores
 
 Se evidencia del manejo de errores con un usuario que no puede tener el rol "SuperUser" con el POST.
 
@@ -188,6 +264,10 @@ Se evidencia que no se puede realizar un solo cambio con el PUT.
 Se evidencia que no se puede realizar la eliminación de un usuario que ya no existe con el DELETE.
 
 ![Validaciones y errores](images/img11.png)
+
+Se evidencia que no se puede realizar el post de un dispositivo ya que no cuenta con un tipo permitido.
+
+![Validaciones y errores](images/errorpostdevice.png)
 ---
 
 ## Como se uso Depends() para reutilizar la logica?

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.models.device_model import Device
+from app.models.loan_model import Loan  
 from app.schemas.device_schema import DeviceCreate, DeviceUpdate, DevicePatch
 
 def get_all_devices(db: Session, device_type: str = None, is_available: bool = None, brand: str = None, search: str = None):
