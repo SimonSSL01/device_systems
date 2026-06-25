@@ -155,6 +155,13 @@ SQLAlchemy es un ORM el cual permite interactuar con bases de datos relacionales
 
 ---
 
+## Estructura de carpetas
+
+![estructura](images/estruc.png)
+
+
+---
+
 ## Capturas correspondientes a actividad 10 (alembic)
 
 Capturas de alembic, connfirmación de instalación, revision de versiones y historial de cambios:
